@@ -43,17 +43,9 @@ public class SecurityConfig {
                 );
         return http.build();
     }
-    //esse é o certo que usa a senha criptografada
+
         @Bean
         public BCryptPasswordEncoder passwordEncoder() {
             return new BCryptPasswordEncoder();
         }
-
-
-     //esse é pra conseguir testar com a senha sem criptografia
-//        @Bean
-//        public PasswordEncoder passwordEncoder() {
-//            return NoOpPasswordEncoder.getInstance();
-//        }
-
 }

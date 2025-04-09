@@ -1,8 +1,8 @@
 /**
- * Serviço responsável por gerar e validar tokens JWT.
+ * servico responsavel por gerar e validar tokens JWT
  *
- * Utiliza a biblioteca do próprio Spring Security + JWT (io.jsonwebtoken).
- * Define um tempo de expiração e assina os tokens com uma chave secreta.
+ * utiliza a biblioteca do próprio Spring Security + JWT
+ * define um tempo de expiração e assina os tokens com uma chave secreta.
  */
 
 package br.senai.sp.menu.restaurante.security.service;
