@@ -38,13 +38,16 @@ public class Users {
     private Long userId;
 
     @Column(name = "username")
-    private String username;
+    private String userName;
 
     @Column(name = "password")
     private String password;
 
 //    @Column(name = "role")
 //    private String role;
+
+    @Column(name = "email")
+    private String email;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
