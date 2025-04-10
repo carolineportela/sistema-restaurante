@@ -98,6 +98,7 @@ public class UsersDetailsDTO implements UserDetails {
         return this.user.getEmail();
     }
 
+    //esses metodos sao obrigatorios pra versao do spring boot q estou utilizando
     @Override
     public boolean isAccountNonExpired() {
         return true;

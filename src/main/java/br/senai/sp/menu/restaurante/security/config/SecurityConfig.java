@@ -1,5 +1,7 @@
 package br.senai.sp.menu.restaurante.security.config;
 
+import br.senai.sp.menu.restaurante.security.filters.AuthenticationFilter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -8,27 +10,14 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfig {
 
-    /**
-     * Expõe o AuthenticationManager como um bean para uso em outras partes do sistema,
-     * como o LoginUseCase.
-     */
-    
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
-        return configuration.getAuthenticationManager();
-    }
-
-    /**
-     * Configura as regras de segurança da aplicação.
-     *
-     */
+    private final AuthenticationFilter authenticationFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -36,16 +25,27 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
+                        // login pode sem token
                         .requestMatchers("/v1/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/v1/users/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/v1/users/**").permitAll()
+                        // cadastro pode sem token
+                        .requestMatchers(HttpMethod.POST, "/v1/users").permitAll()
+                        // qualquer GET em /v1/users precisa de token
+                        .requestMatchers(HttpMethod.GET, "/v1/users/**").authenticated()
                         .anyRequest().authenticated()
-                );
+                )
+                .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 
-        @Bean
-        public BCryptPasswordEncoder passwordEncoder() {
-            return new BCryptPasswordEncoder();
-        }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager();
+    }
+
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 }
