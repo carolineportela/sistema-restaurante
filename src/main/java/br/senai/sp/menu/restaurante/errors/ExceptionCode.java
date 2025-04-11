@@ -1,6 +1,5 @@
 package br.senai.sp.menu.restaurante.errors;
 
-
 public enum ExceptionCode {
     API_FIELDS_INVALID,
     INTERNAL_SERVER_ERROR,

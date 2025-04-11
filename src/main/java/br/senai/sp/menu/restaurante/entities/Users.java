@@ -61,5 +61,10 @@ public class Users {
     @UpdateTimestamp
     @Column(name = "update_timestamp")
     private Instant updateTimestamp;
+
+    //teste email
+    @Column(name = "email_validated")
+    private Instant emailValidated;
+
 }
 
