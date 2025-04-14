@@ -29,6 +29,14 @@ public class SecurityConfig {
                         .requestMatchers("/v1/auth/login").permitAll()
                         // cadastro pode sem token
                         .requestMatchers(HttpMethod.POST, "/v1/users").permitAll()
+                        //swagger
+                        .requestMatchers(
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/swagger-resources/**",
+                                "/webjars/**"
+                        ).permitAll()
                         // qualquer GET em /v1/users precisa de token
                         .requestMatchers(HttpMethod.GET, "/v1/users/**").authenticated()
                         .anyRequest().authenticated()

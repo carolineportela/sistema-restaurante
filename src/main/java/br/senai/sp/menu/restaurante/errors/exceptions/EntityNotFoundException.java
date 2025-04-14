@@ -26,4 +26,5 @@ public class EntityNotFoundException extends RuntimeException {
         this.parameters = parameters;
         log.error(this.getMessage(), this);
     }
+
 }

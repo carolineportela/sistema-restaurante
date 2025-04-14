@@ -8,6 +8,8 @@ import br.senai.sp.menu.restaurante.repositories.user.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 @Service
 @RequiredArgsConstructor
 public class FindUserByIdUseCase {
@@ -17,7 +19,9 @@ public class FindUserByIdUseCase {
 
     public UserDetailedOutputDTO execute(Long id) {
         var user = this.usersRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(Users.class));
+                .orElseThrow(() -> new EntityNotFoundException(Users.class,
+                        Map.of("id", id))
+                );
 
         return this.userMapper.toUserDetailedOutputDTO(user);
     }
