@@ -17,12 +17,14 @@ public class FindUserByIdUseCase {
     private final UsersRepository usersRepository;
     private final UserMapper userMapper;
 
-    public UserDetailedOutputDTO execute(Long id) {
+    public UserDetailedOutputDTO find(Long id) {
         var user = this.usersRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(Users.class,
+                .orElseThrow(() -> new EntityNotFoundException(
+                        Users.class,
                         Map.of("id", id))
                 );
 
         return this.userMapper.toUserDetailedOutputDTO(user);
     }
+
 }

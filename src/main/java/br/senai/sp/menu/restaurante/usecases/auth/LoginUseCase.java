@@ -39,8 +39,6 @@ public class LoginUseCase {
 
         return new LoginOutputDTO(token);
 
-
-
     }
 }
 

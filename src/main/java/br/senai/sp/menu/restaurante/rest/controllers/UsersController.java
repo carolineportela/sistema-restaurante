@@ -31,10 +31,17 @@ public class UsersController {
                 return ResponseEntity.ok(users);
     }
 
+//    @GetMapping("/{id}")
+//    public UserDetailedOutputDTO findById(@PathVariable Long id) {
+//        return findUserByIdUseCase.execute(id);
+//    }
+
     @GetMapping("/{id}")
-    public UserDetailedOutputDTO findById(@PathVariable Long id) {
-        return findUserByIdUseCase.execute(id);
+    public ResponseEntity<UserDetailedOutputDTO> findById(@PathVariable Long id) {
+        return ResponseEntity.ok(findUserByIdUseCase.find(id));
     }
+
+
 
     @PostMapping()
     public ResponseEntity<Void> createUser(@RequestBody CreateUserInputDTO input) {
