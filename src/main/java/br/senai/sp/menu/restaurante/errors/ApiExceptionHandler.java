@@ -21,6 +21,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import org.springframework.web.bind.MissingPathVariableException;
 import br.senai.sp.menu.restaurante.errors.details.MissingPathVariableErrorDetails;
@@ -30,12 +31,31 @@ import br.senai.sp.menu.restaurante.errors.responses.MissingPathVariableErrorRes
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 @RequiredArgsConstructor
 @Slf4j
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     private final MessageService messageService;
+
+//    @Override
+//    protected ResponseEntity<Object> handleMethodArgumentNotValid(
+//            MethodArgumentNotValidException ex,
+//            HttpHeaders headers,
+//            HttpStatusCode status,
+//            WebRequest request
+//    ) {
+//        final var field = Objects.requireNonNull(ex.getBindingResult().getFieldError()).getField();
+//        final var messages = ex.getBindingResult().getAllErrors()
+//                .stream()
+//                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+//                .toArray(String[]::new);
+//
+//        final var body = new HandleMethodArgumentNotValidErrorResponse(new HandleMethodArgumentNotValidErrorDetails(field, messages));
+//
+//        return handleExceptionInternal(ex, body, headers, status, request);
+//    }
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
@@ -44,16 +64,20 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
             HttpStatusCode status,
             WebRequest request
     ) {
-        final var field = Objects.requireNonNull(ex.getBindingResult().getFieldError()).getField();
-        final var messages = ex.getBindingResult().getAllErrors()
-                .stream()
-                .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                .toArray(String[]::new);
+        final var details = ex.getBindingResult().getFieldErrors().stream()
+                .map(fieldError -> Map.of(
+                        "field", fieldError.getField(),
+                        "messages", fieldError.getDefaultMessage() // pega só a primeira mensagem
+                ))
+                .toList();
 
-        final var body = new HandleMethodArgumentNotValidErrorResponse(new HandleMethodArgumentNotValidErrorDetails(field, messages));
+        final var body = new ErrorResponse<>(ExceptionCode.API_FIELDS_INVALID, Map.of("details", details));
 
         return handleExceptionInternal(ex, body, headers, status, request);
     }
+
+
+
 
     private HashMap<String, Object> getExceptionCodeMessage(ExceptionCode exceptionCode) {
         var message = messageService.get(exceptionCode);
@@ -245,33 +269,52 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
-    @ExceptionHandler(value = {IllegalArgumentException.class})
-    public ResponseEntity<Object> illegalArgumentExceptionHandler(IllegalArgumentException ex, WebRequest request) {
-        ErrorResponse<?> body;
-
-        if (ex.getCause().getClass().equals(UnrecognizedPropertyException.class)) {
-            body = new ErrorResponse<>(ExceptionCode.JSON_MAPPING_ERROR, getExceptionCodeMessage(ExceptionCode.JSON_MAPPING_ERROR));
-
-            log.error(ex.getMessage(), ex);
-            return handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
-        }
-
-        body = new ErrorResponse<>(ExceptionCode.API_FIELDS_INVALID, Map.of("sourceMessage", ex.getMessage()));
-        log.error(ex.getMessage(), ex);
-        return handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
-    }
-
-//    @ExceptionHandler(value = {MissingPathVariableException.class})
-//    public ResponseEntity<Object> handleMissingPathVariable(MissingPathVariableException ex, WebRequest request) {
-//        final var details = new MissingPathVariableErrorDetails(
-//                ex.getVariableName(),
-//                "Path variable obrigatória não fornecida: " + ex.getVariableName()
-//        );
+//    @ExceptionHandler(value = {IllegalArgumentException.class})
+//    public ResponseEntity<Object> illegalArgumentExceptionHandler(IllegalArgumentException ex, WebRequest request) {
+//        ErrorResponse<?> body;
 //
-//        final var body = new MissingPathVariableErrorResponse(details);
+//        if (ex.getCause().getClass().equals(UnrecognizedPropertyException.class)) {
+//            body = new ErrorResponse<>(ExceptionCode.JSON_MAPPING_ERROR, getExceptionCodeMessage(ExceptionCode.JSON_MAPPING_ERROR));
 //
+//            log.error(ex.getMessage(), ex);
+//            return handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+//        }
+//
+//        body = new ErrorResponse<>(ExceptionCode.API_FIELDS_INVALID, Map.of("sourceMessage", ex.getMessage()));
 //        log.error(ex.getMessage(), ex);
 //        return handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
 //    }
 
+@ExceptionHandler(value = {IllegalArgumentException.class})
+public ResponseEntity<Object> illegalArgumentExceptionHandler(IllegalArgumentException ex, WebRequest request) {
+    ErrorResponse<?> body;
+
+    if (ex.getCause() != null && ex.getCause() instanceof UnrecognizedPropertyException) {
+        body = new ErrorResponse<>(ExceptionCode.JSON_MAPPING_ERROR, getExceptionCodeMessage(ExceptionCode.JSON_MAPPING_ERROR));
+        log.error(ex.getMessage(), ex);
+        return handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+    }
+
+    body = new ErrorResponse<>(ExceptionCode.API_FIELDS_INVALID, Map.of("sourceMessage", ex.getMessage()));
+    log.error(ex.getMessage(), ex);
+    return handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+}
+
+
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<Object> handleMethodArgumentTypeMismatch(
+            MethodArgumentTypeMismatchException ex, WebRequest request) {
+
+        final var body = new ErrorResponse<>(
+                ExceptionCode.API_FIELDS_INVALID,
+                Map.of(
+                        "field", ex.getName(),
+                        "message", "The value provided for the '" + ex.getName() + "' field is invalid"
+                )
+        );
+
+        log.error(ex.getMessage(), ex);
+        return handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+    }
 }

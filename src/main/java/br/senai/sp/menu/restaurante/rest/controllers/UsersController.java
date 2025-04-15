@@ -5,6 +5,7 @@ import br.senai.sp.menu.restaurante.dtos.user.output.UserDetailedOutputDTO;
 import br.senai.sp.menu.restaurante.usecases.user.CreateUserUseCase;
 import br.senai.sp.menu.restaurante.usecases.user.FindUserByIdUseCase;
 import br.senai.sp.menu.restaurante.usecases.user.ListUsersUseCase;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -14,6 +15,7 @@ import br.senai.sp.menu.restaurante.entities.Users;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/v1/users")
@@ -32,13 +34,13 @@ public class UsersController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDetailedOutputDTO> findById(@PathVariable Long id) {
+    public ResponseEntity<UserDetailedOutputDTO> findById(@PathVariable UUID id) {
         return ResponseEntity.ok(findUserByIdUseCase.find(id));
     }
 
 
     @PostMapping()
-    public ResponseEntity<Void> createUser(@RequestBody CreateUserInputDTO input) {
+    public ResponseEntity<Void> createUser(@RequestBody @Valid CreateUserInputDTO input) {
         createUserUseCase.execute(input);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -27,9 +28,12 @@ public class CreateUserUseCase {
         }
 
         Users user = userMapper.toEntity(input);
+        user.setIdUser(UUID.randomUUID());
         user.setPassword(passwordEncoder.encode(input.getPassword()));
         user.setRole(UserRole.valueOf(input.getRole().toUpperCase()));
 
         usersRepository.save(user);
+        System.out.println("Nome recebido no DTO: " + input.getName());
+
     }
 }

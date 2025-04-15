@@ -20,6 +20,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Objects;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -59,7 +60,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         return token.substring(7);
     }
 
-    private void authenticate(Long userId, HttpServletRequest request) {
+    private void authenticate(UUID userId, HttpServletRequest request) {
         final var user = usersRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
         final var userDetails = new UsersDetailsDTO(user);
 

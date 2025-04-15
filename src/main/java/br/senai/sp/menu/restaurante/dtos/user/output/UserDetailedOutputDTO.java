@@ -4,15 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Getter
 @Setter
 @AllArgsConstructor
 public class UserDetailedOutputDTO {
-//    private Long id;
-//    private String name;
-//    private String email;
 
-    private Long userId;
-    private String userName;
+    private UUID idUser;
+    private String name;
     private String email;
+
 }

@@ -59,10 +59,11 @@ public class UsersDetailsDTO implements UserDetails {
 
     public Map<String, ?> toMap() {
         return Map.of(
-                "id", this.user.getUserId().toString(),
-                "name", this.user.getUserName(),
+                "idUser", this.user.getIdUser().toString(),
+                "name", this.user.getName(),
                 "email", user.getEmail(),
                 "role", user.getRole().name()
         );
     }
+
 }

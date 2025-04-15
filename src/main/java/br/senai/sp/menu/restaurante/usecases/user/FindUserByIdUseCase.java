@@ -7,6 +7,7 @@ import br.senai.sp.menu.restaurante.mappers.users.UserMapper;
 import br.senai.sp.menu.restaurante.repositories.user.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import java.util.UUID;
 
 import java.util.Map;
 
@@ -17,7 +18,7 @@ public class FindUserByIdUseCase {
     private final UsersRepository usersRepository;
     private final UserMapper userMapper;
 
-    public UserDetailedOutputDTO find(Long id) {
+    public UserDetailedOutputDTO find(UUID id) {
         var user = this.usersRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(
                         Users.class,

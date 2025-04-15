@@ -4,12 +4,13 @@ import br.senai.sp.menu.restaurante.dtos.user.input.CreateUserInputDTO;
 import br.senai.sp.menu.restaurante.dtos.user.output.UserDetailedOutputDTO;
 import br.senai.sp.menu.restaurante.entities.Users;
 import br.senai.sp.menu.restaurante.enums.UserRole;
+import java.util.UUID;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-04-15T11:58:08-0300",
+    date = "2025-04-15T18:25:10-0300",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.12 (Oracle Corporation)"
 )
 @Component
@@ -21,15 +22,15 @@ public class UserMapperImpl implements UserMapper {
             return null;
         }
 
-        Long userId = null;
-        String userName = null;
+        UUID idUser = null;
+        String name = null;
         String email = null;
 
-        userId = entity.getUserId();
-        userName = entity.getUserName();
+        idUser = entity.getIdUser();
+        name = entity.getName();
         email = entity.getEmail();
 
-        UserDetailedOutputDTO userDetailedOutputDTO = new UserDetailedOutputDTO( userId, userName, email );
+        UserDetailedOutputDTO userDetailedOutputDTO = new UserDetailedOutputDTO( idUser, name, email );
 
         return userDetailedOutputDTO;
     }
@@ -42,9 +43,9 @@ public class UserMapperImpl implements UserMapper {
 
         Users users = new Users();
 
-        users.setUserName( dto.getUserName() );
-        users.setPassword( dto.getPassword() );
+        users.setName( dto.getName() );
         users.setEmail( dto.getEmail() );
+        users.setPassword( dto.getPassword() );
         if ( dto.getRole() != null ) {
             users.setRole( Enum.valueOf( UserRole.class, dto.getRole() ) );
         }
