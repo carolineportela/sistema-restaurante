@@ -1,5 +1,6 @@
 package br.senai.sp.menu.restaurante.errors;
 
+import br.senai.sp.menu.restaurante.entities.Users;
 import br.senai.sp.menu.restaurante.errors.details.*;
 import br.senai.sp.menu.restaurante.errors.exceptions.*;
 import br.senai.sp.menu.restaurante.errors.i18n.MessageService;
