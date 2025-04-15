@@ -184,7 +184,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(value = {DuplicatedResourceException.class})
     public ResponseEntity<Object> duplicateResourceExceptionHandler(DuplicatedResourceException ex, WebRequest request) {
         final var body = new DuplicatedResourceErrorResponse(
-                new DuplicatedResourceErrorDetails(ex.getResourceClass(), ex.getParameters())
+                new DuplicatedResourceErrorDetails(ex.getParameters())
         );
 
         log.error(ex.getMessage(), ex);
