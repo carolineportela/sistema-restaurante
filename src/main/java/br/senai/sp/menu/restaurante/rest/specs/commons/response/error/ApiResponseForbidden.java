@@ -18,12 +18,15 @@ import java.lang.annotation.Target;
         description = "${springdoc.swagger-config.responses.error.403}",
         content = @Content(
                 mediaType = MediaType.APPLICATION_JSON_VALUE,
-                schema = @Schema(
-                        implementation = ErrorResponse.class,
-                        example = "{ \"error\": \"FORBIDDEN\", \"details\": {} }"
-                )
+                examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
+                        summary = "User does not have permission",
+                        value = "{ \"error\": \"FORBIDDEN\", \"details\": {} }"
+                ),
+                schema = @Schema(implementation = ErrorResponse.class)
         )
 )
+
+
 public @interface ApiResponseForbidden {
 }
 

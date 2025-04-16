@@ -20,7 +20,7 @@ public class AuthenticationContextServiceImpl implements UserDetailsService {
 
     private final UsersRepository usersRepository;
 
-    // Usado na autenticação
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Users user = usersRepository.findByEmail(email)
@@ -28,7 +28,6 @@ public class AuthenticationContextServiceImpl implements UserDetailsService {
         return new UsersDetailsDTO(user);
     }
 
-    // Usado para recuperar o usuário logado
     public UsersDetailsDTO getData() {
         var principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 

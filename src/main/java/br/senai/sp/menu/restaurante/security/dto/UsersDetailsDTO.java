@@ -54,9 +54,6 @@ public class UsersDetailsDTO implements UserDetails {
     }
 
 
-     //converte os dados do usuário em um mapa para uso no payload do token JWT.
-
-
     public Map<String, ?> toMap() {
         return Map.of(
                 "idUser", this.user.getIdUser().toString(),

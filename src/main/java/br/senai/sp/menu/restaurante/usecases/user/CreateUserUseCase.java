@@ -33,7 +33,7 @@ public class CreateUserUseCase {
         user.setRole(UserRole.valueOf(input.getRole().toUpperCase()));
 
         usersRepository.save(user);
-        System.out.println("Nome recebido no DTO: " + input.getName());
+        System.out.println("nome recebido no DTO: " + input.getName());
 
     }
 }

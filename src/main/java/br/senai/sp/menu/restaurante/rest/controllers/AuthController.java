@@ -6,11 +6,10 @@ import br.senai.sp.menu.restaurante.rest.specs.AuthControllerSpecs;
 import br.senai.sp.menu.restaurante.usecases.auth.LoginUseCase;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/v1/auth")
+@RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController implements AuthControllerSpecs {
 

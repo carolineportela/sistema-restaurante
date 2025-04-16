@@ -14,32 +14,26 @@ import java.util.List;
 @Configuration
 public class SwaggerConfig {
 
-    //@Value("${server.servlet.context-path}")
-    //private String serverBasePath;
-
-    private final String serverBasePath = "";
-
+    @Value("${server.servlet.context-path}")
+    private String serverBasePath;
 
     private static final List<String> apiVersions = List.of("v1");
 
     @Bean
     public OpenAPI customOpenAPI() {
-        var apiInfo = new Info().title("Restaurante API").version("1.0");
+        var apiInfo = new Info().title("Sistema Restaurante API").version("1.0");
 
         var swaggerVariables = new ServerVariables()
-                .addServerVariable(
-                        "version",
-                        new ServerVariable()
-                                ._enum(apiVersions)
-                                //._default(apiVersions.getFirst())
-                                ._default(apiVersions.get(0))
-                                .description("API Version")
-                );
+                .addServerVariable("version", new ServerVariable()
+                        ._enum(apiVersions)
+                        ._default(apiVersions.get(0))
+                        .description("API Version"));
 
         var apiBaseServer = new Server()
                 .description("Base URL")
-                .url("");
+                .url(serverBasePath);
 
         return new OpenAPI().info(apiInfo).addServersItem(apiBaseServer);
     }
 }
+

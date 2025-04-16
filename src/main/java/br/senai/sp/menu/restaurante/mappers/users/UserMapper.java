@@ -3,7 +3,6 @@ package br.senai.sp.menu.restaurante.mappers.users;
 import br.senai.sp.menu.restaurante.dtos.user.input.CreateUserInputDTO;
 import br.senai.sp.menu.restaurante.dtos.user.output.UserDetailedOutputDTO;
 import br.senai.sp.menu.restaurante.entities.Users;
-import ch.qos.logback.core.util.SystemInfo;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

@@ -1,6 +1,5 @@
 package br.senai.sp.menu.restaurante.errors;
 
-import br.senai.sp.menu.restaurante.entities.Users;
 import br.senai.sp.menu.restaurante.errors.details.*;
 import br.senai.sp.menu.restaurante.errors.exceptions.*;
 import br.senai.sp.menu.restaurante.errors.i18n.MessageService;
@@ -9,7 +8,6 @@ import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpHeaders;
@@ -23,15 +21,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import org.springframework.web.bind.MissingPathVariableException;
-import br.senai.sp.menu.restaurante.errors.details.MissingPathVariableErrorDetails;
-import br.senai.sp.menu.restaurante.errors.responses.MissingPathVariableErrorResponse;
-
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
+
 
 @RestControllerAdvice
 @RequiredArgsConstructor
@@ -39,23 +32,6 @@ import java.util.stream.Collectors;
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     private final MessageService messageService;
 
-//    @Override
-//    protected ResponseEntity<Object> handleMethodArgumentNotValid(
-//            MethodArgumentNotValidException ex,
-//            HttpHeaders headers,
-//            HttpStatusCode status,
-//            WebRequest request
-//    ) {
-//        final var field = Objects.requireNonNull(ex.getBindingResult().getFieldError()).getField();
-//        final var messages = ex.getBindingResult().getAllErrors()
-//                .stream()
-//                .map(DefaultMessageSourceResolvable::getDefaultMessage)
-//                .toArray(String[]::new);
-//
-//        final var body = new HandleMethodArgumentNotValidErrorResponse(new HandleMethodArgumentNotValidErrorDetails(field, messages));
-//
-//        return handleExceptionInternal(ex, body, headers, status, request);
-//    }
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
@@ -67,7 +43,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         final var details = ex.getBindingResult().getFieldErrors().stream()
                 .map(fieldError -> Map.of(
                         "field", fieldError.getField(),
-                        "messages", fieldError.getDefaultMessage() // pega só a primeira mensagem
+                        "messages", fieldError.getDefaultMessage()
                 ))
                 .toList();
 

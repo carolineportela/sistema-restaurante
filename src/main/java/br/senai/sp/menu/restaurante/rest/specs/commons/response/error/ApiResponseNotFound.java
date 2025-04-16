@@ -2,6 +2,7 @@ package br.senai.sp.menu.restaurante.rest.specs.commons.response.error;
 
 import br.senai.sp.menu.restaurante.errors.ErrorResponse;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.http.MediaType;
@@ -18,10 +19,11 @@ import java.lang.annotation.Target;
         description = "${springdoc.swagger-config.responses.error.404}",
         content = @Content(
                 mediaType = MediaType.APPLICATION_JSON_VALUE,
-                schema = @Schema(
-                        implementation = ErrorResponse.class,
-                        example = "{ \"error\": \"ENTITY_NOT_FOUND\", \"details\": {} }"
-                )
+                examples = @ExampleObject(
+                        summary = "Resource not found",
+                        value = "{ \"error\": \"ENTITY_NOT_FOUND\", \"details\": { \"entity\": \"Users\", \"parameters\": { \"id\": \"uuid\" } } }"
+                ),
+                schema = @Schema(implementation = ErrorResponse.class)
         )
 )
 public @interface ApiResponseNotFound {

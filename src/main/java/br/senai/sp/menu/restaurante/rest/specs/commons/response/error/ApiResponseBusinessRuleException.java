@@ -2,6 +2,7 @@ package br.senai.sp.menu.restaurante.rest.specs.commons.response.error;
 
 import br.senai.sp.menu.restaurante.errors.ErrorResponse;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.http.MediaType;
@@ -15,12 +16,15 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE, ElementType.METHOD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE})
 @ApiResponse(
         responseCode = "422",
+        description = "${springdoc.swagger-config.responses.error.422}",
         content = @Content(
                 mediaType = MediaType.APPLICATION_JSON_VALUE,
-                schema = @Schema(
-                        implementation = ErrorResponse.class,
-                        example = "{ \"error\": \"BUSINESS_RULE_EXCEPTION_CODE\", \"details\": {} }"
-                )
+                examples = @ExampleObject(
+                        name = "Business rule violation",
+                        summary = "A business validation error occurred",
+                        value = "{ \"error\": \"BUSINESS_RULE_EXCEPTION_CODE\", \"details\": {} }"
+                ),
+                schema = @Schema(implementation = ErrorResponse.class)
         )
 )
 public @interface ApiResponseBusinessRuleException {

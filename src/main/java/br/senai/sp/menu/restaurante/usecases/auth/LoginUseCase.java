@@ -1,13 +1,3 @@
-/**
- * caso de uso responsável por autenticar o usuário e gerar um JWT
- *
- * etapas do processo:
- * 1. recebe os dados do usuário (email e password) via LoginInputDTO.
- * 2. autentica o usuário usando o AuthenticationManager do Spring Security.
- * 3. gera um token JWT com base no usuário autenticado.
- * 4. retorna esse token encapsulado em um LoginOutputDTO.
- */
-
 package br.senai.sp.menu.restaurante.usecases.auth;
 
 import br.senai.sp.menu.restaurante.dtos.auth.input.LoginInputDTO;
