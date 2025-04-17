@@ -1,7 +1,51 @@
+//package br.senai.sp.menu.restaurante.config.swagger;
+//
+//import io.swagger.v3.oas.models.OpenAPI;
+//import io.swagger.v3.oas.models.info.Info;
+//import io.swagger.v3.oas.models.servers.Server;
+//import io.swagger.v3.oas.models.servers.ServerVariable;
+//import io.swagger.v3.oas.models.servers.ServerVariables;
+//import org.springframework.beans.factory.annotation.Value;
+//import org.springframework.context.annotation.Bean;
+//import org.springframework.context.annotation.Configuration;
+//import io.swagger.v3.oas.models.security.SecurityScheme;
+//
+//
+//import java.util.List;
+//
+//@Configuration
+//public class SwaggerConfig {
+//
+//    @Value("${server.servlet.context-path}")
+//    private String serverBasePath;
+//
+//    private static final List<String> apiVersions = List.of("v1");
+//
+//    @Bean
+//    public OpenAPI customOpenAPI() {
+//        var apiInfo = new Info().title("Sistema Restaurante API").version("1.0");
+//
+//        var swaggerVariables = new ServerVariables()
+//                .addServerVariable("version", new ServerVariable()
+//                        ._enum(apiVersions)
+//                        ._default(apiVersions.get(0))
+//                        .description("API Version"));
+//
+//        var apiBaseServer = new Server()
+//                .description("Base URL")
+//                .url(serverBasePath);
+//
+//        return new OpenAPI().info(apiInfo).addServersItem(apiBaseServer);
+//    }
+//}
+//
+
 package br.senai.sp.menu.restaurante.config.swagger;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
 import io.swagger.v3.oas.models.servers.ServerVariable;
 import io.swagger.v3.oas.models.servers.ServerVariables;
@@ -33,7 +77,20 @@ public class SwaggerConfig {
                 .description("Base URL")
                 .url(serverBasePath);
 
-        return new OpenAPI().info(apiInfo).addServersItem(apiBaseServer);
+        // definição do Security Scheme para autenticação JWT
+        var securityScheme = new SecurityScheme()
+                .name("bearerAuth")
+                .type(SecurityScheme.Type.HTTP)
+                .scheme("bearer")
+                .bearerFormat("JWT")
+                .in(SecurityScheme.In.HEADER);
+
+        return new OpenAPI()
+                .info(apiInfo)
+                .addServersItem(apiBaseServer)
+                .components(new io.swagger.v3.oas.models.Components()
+                        .addSecuritySchemes("bearerAuth", securityScheme))
+                .addSecurityItem(new SecurityRequirement().addList("bearerAuth"));
     }
 }
 
